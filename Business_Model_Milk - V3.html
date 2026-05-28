@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DairyWealth Pro v4.9 | Professional Bio-Asset Ledger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f1f5f9; }
+        .card-glass { background: white; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .input-sm { width: 100%; padding: 0.4rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; outline: none; font-size: 0.8rem; text-align: center; }
+        .input-sm:focus { border-color: #b45309; ring: 1px #b45309; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .ledger-table th { background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700; padding: 8px; border-bottom: 2px solid #e2e8f0; }
+        .ledger-table td { padding: 8px; border-bottom: 1px solid #f1f5f9; }
+    </style>
+</head>
+<body class="text-slate-800 font-sans">
+
+    <header class="bg-amber-800 text-white p-6 shadow-lg border-b-4 border-amber-600">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2 rounded-full text-amber-800"><i class="fas fa-coins text-2xl"></i></div>
+                <div>
+                    <h1 class="text-3xl font-bold leading-tight">DairyWealth Optimizer <span class="text-amber-300 text-lg font-normal">v4.9</span></h1>
+                    <p class="text-amber-200 text-sm">Precision Asset Ledger: Milk $\rightarrow$ Waste $\rightarrow$ Draft Power</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span class="bg-amber-600 px-3 py-1 rounded-full text-xs border border-amber-400 uppercase font-bold">6M Business Engine</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- LEFT COLUMN: INPUTS -->
+        <div class="lg:col-span-7 space-y-6">
+            
+            <!-- 1. MANPOWER -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-users"></i> 1. Manpower (Social Stack)</h2>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 text-center">
+                        <span class="block text-xs font-black text-blue-800 uppercase mb-1">Elders</span>
+                        <p class="text-[10px] text-blue-600">Breeding & Draft Logic</p>
+                    </div>
+                    <div class="p-3 bg-green-50 rounded-xl border border-green-100 text-center">
+                        <span class="block text-xs font-black text-green-800 uppercase mb-1">Youth</span>
+                        <p class="text-[10px] text-green-600">Tech, Logistics & FPO</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-center">
+                        <span class="block text-xs font-black text-purple-800 uppercase mb-1">Women</span>
+                        <p class="text-[10px] text-purple-600">Value Addition & Retail</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. ANIMAL ASSETS -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-cow"></i> 2. Animal Asset & Lifecycle</h2>
+                <div class="grid grid-cols-5 gap-4 mb-4">
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Cows</label><input type="number" id="count-cow" value="5" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Buffs</label><input type="number" id="count-buffalo" value="5" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Bulls</label><input type="number" id="count-bull" value="2" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Ltr/Day</label><input type="number" id="avg-yield" value="12" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Days/Yr</label><input type="number" id="milk-days" value="300" oninput="updateBaselines()" class="input-sm"></div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-bold text-amber-800 uppercase">Cow Cost (₹)</label>
+                        <input type="number" id="cost-cow" value="40000" oninput="calculateCompletePlan()" class="input-sm font-bold text-amber-900">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-bold text-amber-800 uppercase">Buffalo Cost (₹)</label>
+                        <input type="number" id="cost-buff" value="45000" oninput="calculateCompletePlan()" class="input-sm font-bold text-amber-900">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-bold text-amber-800 uppercase">Bull Cost (₹)</label>
+                        <input type="number" id="cost-bull" value="25000" oninput="calculateCompletePlan()" class="input-sm font-bold text-amber-900">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <p class="text-xs font-bold text-slate-400 uppercase border-b pb-1">Daily Feed (Per Animal)</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="flex flex-col"><label class="text-[10px]">Green (kg)</label><input type="number" id="f-green-q" value="20" oninput="updateBaselines()" class="input-sm"></div>
+                            <div class="flex flex-col"><label class="text-[10px]">Rate (₹)</label><input type="number" id="f-green-p" value="2" class="input-sm"></div>
+                            <div class="flex flex-col"><label class="text-[10px]">Dry (kg)</label><input type="number" id="f-dry-q" value="5" oninput="updateBaselines()" class="input-sm"></div>
+                            <div class="flex flex-col"><label class="text-[10px]">Rate (₹)</label><input type="number" id="f-dry-p" value="5" class="input-sm"></div>
+                            <div class="flex flex-col"><label class="text-[10px]">Conc (kg)</label><input type="number" id="f-sil-q" value="3" oninput="updateBaselines()" class="input-sm"></div>
+                            <div class="flex flex-col"><label class="text-[10px]">Rate (₹)</label><input type="number" id="f-sil-p" value="12" class="input-sm"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-slate-400 uppercase border-b pb-1">Animal OpEx (Monthly)</p>
+                        <div class="flex justify-between items-center gap-2">
+                            <span class="text-xs">Vet/Med:</span><input type="number" id="cost-vet" value="1000" class="input-sm w-24">
+                        </div>
+                        <div class="flex justify-between items-center gap-2">
+                            <span class="text-xs">Electricity:</span><input type="number" id="cost-elec" value="800" class="input-sm w-24">
+                        </div>
+                        <div class="flex justify-between items-center gap-2">
+                            <span class="text-xs">Labor:</span><input type="number" id="cost-lab" value="3000" class="input-sm w-24">
+                        </div>
+                        <div class="flex items-start gap-2 mt-4">
+                            <input type="checkbox" id="stop-all-post-tenure" class="mt-1 w-4 h-4 accent-amber-600">
+                            <label class="text-xs font-bold text-slate-600 leading-tight">Cull Herd after Tenure</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. MILK PARTITIONING -->
+            <section class="card-glass p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-amber-800 flex items-center gap-2"><i class="fas fa-vials"></i> 3. Milk Partitioning</h2>
+                    <button onclick="optimizeMilkMix()" class="text-xs bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-500 font-bold">Optimize Mix</button>
+                </div>
+                <div class="p-3 bg-amber-50 rounded-lg mb-4 flex justify-between items-center">
+                    <span class="text-sm font-medium text-amber-800">Annual Milk Pool:</span>
+                    <span class="text-lg font-black text-amber-900"><span id="total-milk-pool">0</span> Ltrs/Year</span>
+                </div>
+                <table class="w-full text-left text-xs ledger-table">
+                    <thead>
+                        <tr><th>Product</th><th class="text-center">Alloc (L)</th><th class="text-center">Ratio</th><th class="text-center">Price (₹)</th><th class="text-right">Value (₹)</th></tr>
+                    </thead>
+                    <tbody id="milk-body"></tbody>
+                </table>
+            </section>
+
+            <!-- 4. WASTE TO WEALTH -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-recycle"></i> 4. Waste to Wealth</h2>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="p-3 bg-slate-100 rounded-lg flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-600">Daily Dung (kg):</span>
+                        <input type="number" id="total-dung" class="input-sm w-24 font-bold text-slate-800" oninput="calculateCompletePlan()">
+                    </div>
+                    <div class="p-3 bg-slate-100 rounded-lg flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-600">Daily Urine (L):</span>
+                        <input type="number" id="total-urine" class="input-sm w-24 font-bold text-slate-800" oninput="calculateCompletePlan()">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="p-4 border rounded-xl bg-orange-50 relative">
+                        <div class="flex justify-between mb-2"><span class="font-bold text-orange-800 text-[10px] uppercase">Bio-Gas</span><input type="checkbox" id="do-biogas" checked class="w-4 h-4"></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-[9px]"><span>Yield:</span><input type="number" id="gas-ratio" value="0.04" class="input-sm w-10"></div>
+                            <div class="flex justify-between text-[9px]"><span>Price:</span><input type="number" id="gas-price" value="30" class="input-sm w-10"></div>
+                            <div class="flex justify-between text-[9px]"><span>Cost:</span><input type="number" id="gas-cost" value="5" class="input-sm w-10"></div>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-orange-200 text-right font-black text-orange-700 text-xs">₹ <span id="val-biogas">0</span></div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-green-50">
+                        <div class="flex justify-between mb-2"><span class="font-bold text-green-800 text-[10px] uppercase">Compost</span><input type="checkbox" id="do-compost" checked class="w-4 h-4"></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-[9px]"><span>Yield:</span><input type="number" id="comp-ratio" value="0.7" class="input-sm w-10"></div>
+                            <div class="flex justify-between text-[9px]"><span>Price:</span><input type="number" id="comp-price" value="7.5" class="input-sm w-10"></div>
+                            <div class="flex justify-between text-[9px]"><span>Cost:</span><input type="number" id="comp-cost" value="0" class="input-sm w-10"></div>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-green-200 text-right font-black text-green-700 text-xs">₹ <span id="val-compost">0</span></div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-yellow-50">
+                        <div class="flex justify-between mb-2"><span class="font-bold text-yellow-800 text-[10px] uppercase">Urine</span><input type="checkbox" id="do-urine" checked class="w-4 h-4"></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-[9px]"><span>Ltr/Anim:</span><input type="number" id="urine-yield" value="12" class="input-sm w-10" oninput="updateBaselines()"></div>
+                            <div class="flex justify-between text-[9px]"><span>Price:</span><input type="number" id="urine-price" value="5" class="input-sm w-10"></div>
+                            <div class="flex justify-between text-[9px]"><span>Cost:</span><input type="number" id="urine-cost" value="0" class="input-sm w-10"></div>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-yellow-200 text-right font-black text-yellow-700 text-xs">₹ <span id="val-urine">0</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. DRAFT POWER -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-tractor"></i> 5. Draft Power Revenue</h2>
+                <div class="mb-6">
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">Bull Operations (Core)</p>
+                    <table class="w-full text-xs ledger-table border">
+                        <thead>
+                            <tr><th>Operation</th><th class="text-center">Days/Yr</th><th class="text-center">Rate (₹)</th><th class="text-right">Annual Value</th></tr>
+                        </thead>
+                        <tbody id="dp-body">
+                            <tr>
+                                <td class="py-2">Land Preparation</td>
+                                <td><input type="number" id="dp-land-days" value="30" oninput="calculateCompletePlan()" class="input-sm"></td>
+                                <td><input type="number" id="dp-land-rate" value="2000" oninput="calculateCompletePlan()" class="input-sm"></td>
+                                <td class="text-right font-bold text-amber-700" id="dp-land-val">0</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">Sowing / Weeding</td>
+                                <td><input type="number" id="dp-sow-days" value="20" oninput="calculateCompletePlan()" class="input-sm"></td>
+                                <td><input type="number" id="dp-sow-rate" value="2000" oninput="calculateCompletePlan()" class="input-sm"></td>
+                                <td class="text-right font-bold text-amber-700" id="dp-sow-val">0</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">Mill Work</td>
+                                <td><input type="number" id="dp-mill-days" value="40" oninput="calculateCompletePlan()" class="input-sm"></td>
+                                <td><input type="number" id="dp-mill-rate" value="500" oninput="calculateCompletePlan()" class="input-sm"></td>
+                                <td class="text-right font-bold text-amber-700" id="dp-mill-val">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Post-Milking Leverage</p>
+                        <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 flex justify-between items-center">
+                            <span class="text-xs font-medium">Gen Draft</span>
+                            <div class="flex gap-2">
+                                <input type="number" id="dp-post-days" value="45" oninput="calculateCompletePlan()" class="input-sm w-12">
+                                <input type="number" id="dp-post-rate" value="1000" oninput="calculateCompletePlan()" class="input-sm w-16">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 p-3 rounded-lg border border-red-100">
+                        <p class="text-xs font-bold text-red-800 uppercase mb-1">DP OpEx (Daily)</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] text-red-600">Extra Feed (₹/Day):</span>
+                            <input type="number" id="dp-opex-daily" value="15" oninput="calculateCompletePlan()" class="input-sm w-16 font-bold">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. MACHINERY -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-tools"></i> 6. Machinery Setup</h2>
+                <table class="w-full text-xs ledger-table border">
+                    <thead>
+                        <tr><th>Machine Name</th><th class="text-center">Buy (₹)</th><th class="text-center">Rent (Mo)</th><th class="text-center">Status</th><th></th></tr>
+                    </thead>
+                    <tbody id="machinery-body"></tbody>
+                </table>
+                <div class="flex justify-end items-center mt-4">
+                    <button onclick="addMachineRow()" class="text-xs text-amber-800 font-bold hover:underline mr-4">+ Add Machine</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- RIGHT COLUMN: ANALYTICS -->
+        <div class="lg:col-span-5 space-y-6">
+            <div id="viability-banner" class="hidden p-6 rounded-2xl text-center text-white font-bold text-2xl shadow-lg"></div>
+
+            <section class="card-glass p-6 rounded-2xl border-l-4 border-amber-700 space-y-4">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs font-bold text-slate-600 uppercase">Projection Horizon (Years)</label>
+                    <input type="number" id="proj-years" value="5" oninput="calculateCompletePlan()" class="input-sm w-20 font-bold text-amber-800">
+                </div >
+                <button onclick="calculateCompletePlan()" class="w-full bg-amber-800 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md uppercase tracking-wide">Compute Final Plan</button>
+            </section>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="card-glass p-6 rounded-2xl border-l-4 border-amber-500 text-center">
+                    <span class="text-slate-500 text-[10px] uppercase font-bold">Total CAPEX</span>
+                    <div class="text-2xl font-black text-amber-900">₹ <span id="res-capex">0</span></div>
+                </div>
+                <div class="card-glass p-6 rounded-2xl border-l-4 border-blue-500 text-center">
+                    <span class="text-slate-500 text-[10px] uppercase font-bold">Annual Rev</span>
+                    <div class="text-2xl font-black text-blue-900">₹ <span id="res-revenue">0</span></div>
+                </div>
+                <div class="card-glass p-6 rounded-2xl border-l-4 border-purple-500 text-center">
+                    <span class="text-slate-500 text-[10px] uppercase font-bold">Annual Profit</span>
+                    <div class="text-2xl font-black text-purple-900">₹ <span id="res-profit">0</span></div>
+                </div>
+                <div class="card-glass p-6 rounded-2xl border-l-4 border-green-500 text-center">
+                    <span class="text-slate-500 text-[10px] uppercase font-bold">Life ROI</span>
+                    <div class="text-2xl font-black text-green-900"><span id="res-roi">0</span>%</div>
+                </div>
+            </div>
+
+            <section class="card-glass p-6 rounded-2xl bg-slate-50">
+                <h3 class="text-sm font-black text-slate-700 uppercase mb-3 border-b pb-2">Annual OpEx Breakdown</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs"><span>Animal OpEx:</span><span class="font-bold" id="sum-anim-op">₹ 0</span></div>
+                    <div class="flex justify-between text-xs"><span>W/W OpEx:</span><span class="font-bold" id="sum-ww-op">₹ 0</span></div>
+                    <div class="flex justify-between text-xs"><span>Draft Power OpEx:</span><span class="font-bold" id="sum-dp-op">₹ 0</span></div>
+                    <div class="flex justify-between text-sm pt-2 border-t font-black text-amber-900"><span>Total Annual OpEx:</span><span id="sum-total-op">₹ 0</span></div>
+                </div>
+            </section>
+
+            <section class="card-glass p-6 rounded-2xl">
+                <h3 class="text-sm font-bold mb-4 text-slate-700 uppercase">Revenue Mix</h3>
+                <div class="relative h-64"><canvas id="revenueChart"></canvas></div>
+            </section>
+
+            <section class="card-glass p-6 rounded-2xl overflow-hidden">
+                <h3 class="text-sm font-bold mb-4 text-slate-700 uppercase">Annual Cash Flow Projection</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs ledger-table border">
+                        <thead>
+                            <tr class="bg-slate-50">
+                                <th rowspan="2" class="border-r">Year</th>
+                                <th colspan="3" class="text-center bg-blue-50 text-blue-800 border-r">REVENUE</th>
+                                <th rowspan="2" class="text-center bg-red-50 text-red-800 border-r">OPEX</th>
+                                <th rowspan="2" class="text-right bg-slate-100">NET POSITION</th>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <th class="text-center border-r">Milk</th>
+                                <th class="text-center border-r">W/W</th>
+                                <th class="text-center border-r">DP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projection-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const milkCommodities = {
+            'raw_milk': { name: 'Raw Milk', ratio: 1, price: 45, cost: 5, color: '#3b82f6', maxDemand: 0.5 },
+            'ghee': { name: 'Organic Ghee', ratio: 0.04, price: 650, cost: 120, color: '#eab308', maxDemand: 0.15 },
+            'paneer': { name: 'Fresh Paneer', ratio: 0.2, price: 380, cost: 110, color: '#10b981', maxDemand: 0.15 },
+            'khoya': { name: 'Milk Khoya', ratio: 0.25, price: 400, cost: 100, color: '#f97316', maxDemand: 0.1 },
+            'lassi': { name: 'Lassi', ratio: 0.9, price: 40, cost: 10, color: '#f472b6', maxDemand: 0.1 },
+            'buttermilk': { name: 'Butter Milk', ratio: 0.8, price: 30, cost: 8, color: '#94a3b8', maxDemand: 0.1 }
+        };
+
+        let machineryData = [
+            { name: 'Chaff Cutter', buy: 15000, rent: 500 },
+            { name: 'Milking Machine', buy: 40000, rent: 1200 },
+            { name: 'Bulk Milk Chiller', buy: 180000, rent: 4000 },
+            { name: 'Biogas Plant', buy: 120000, rent: 3000 }
+        ];
+
+        let revenueChart = null;
+
+        window.onload = () => {
+            renderMilkTable();
+            renderMachineryTable();
+            updateBaselines();
+            calculateCompletePlan();
+        };
+
+        function renderMilkTable() {
+            const mBody = document.getElementById('milk-body');
+            mBody.innerHTML = "";
+            Object.keys(milkCommodities).forEach(key => {
+                const item = milkCommodities[key];
+                mBody.innerHTML += `<tr class="border-b border-slate-100">
+                    <td class="py-2 font-medium">${item.name}</td>
+                    <td><input type="number" id="alc-${key}" value="0" oninput="updateMilkValues()" class="input-sm"></td>
+                    <td class="text-center">${item.ratio}</td>
+                    <td><input type="number" id="pri-${key}" value="${item.price}" oninput="updateMilkValues()" class="input-sm"></td>
+                    <td class="text-right font-bold text-amber-700" id="val-${key}">0</td>
+                </tr>`;
+            });
+        }
+
+        function renderMachineryTable() {
+            const machBody = document.getElementById('machinery-body');
+            machBody.innerHTML = "";
+            machineryData.forEach((m, idx) => {
+                machBody.innerHTML += `<tr class="border-b border-slate-100">
+                    <td><input type="text" value="${m.name}" class="input-sm text-left px-2" id="name-${idx}"></td>
+                    <td><input type="number" value="${m.buy}" class="input-sm" id="buy-${idx}"></td>
+                    <td><input type="number" value="${m.rent}" class="input-sm" id="rent-${idx}"></td>
+                    <td>
+                        <select id="status-${idx}" class="p-1 text-[10px] font-bold uppercase border rounded">
+                            <option value="owned">Owned</option>
+                            <option value="shared">Shared</option>
+                        </select>
+                    </td>
+                    <td class="text-right"><button onclick="removeMachine(${idx})" class="text-red-400 hover:text-red-600 px-2"><i class="fas fa-trash"></i></button></td>
+                </tr>`;
+            });
+        }
+
+        function addMachineRow() {
+            machineryData.push({ name: 'New Machine', buy: 0, rent: 0 });
+            renderMachineryTable();
+        }
+
+        function removeMachine(idx) {
+            machineryData.splice(idx, 1);
+            renderMachineryTable();
+        }
+
+        function updateBaselines() {
+            const cows = Number(document.getElementById('count-cow').value);
+            const buff = Number(document.getElementById('count-buffalo').value);
+            const bulls = Number(document.getElementById('count-bull').value);
+            const yield_ = Number(document.getElementById('avg-yield').value);
+            const days = Number(document.getElementById('milk-days').value);
+            
+            const totalAnnualMilk = (cows + buff) * yield_ * days;
+            document.getElementById('total-milk-pool').innerText = Math.round(totalAnnualMilk).toLocaleString();
+
+            const gQ = Number(document.getElementById('f-green-q').value);
+            const dQ = Number(document.getElementById('f-dry-q').value);
+            const sQ = Number(document.getElementById('f-sil-q').value);
+            
+            const dungPerAnimal = 10 + (gQ * 0.15) + (dQ * 0.05) + (sQ * 0.10);
+            const totalDung = (cows + buff + bulls) * dungPerAnimal;
+            document.getElementById('total-dung').value = Math.round(totalDung);
+
+            const urineYield = Number(document.getElementById('urine-yield').value);
+            const totalUrine = (cows + buff + bulls) * urineYield;
+            document.getElementById('total-urine').value = Math.round(totalUrine);
+            
+            return { totalAnnualMilk, totalDung, totalUrine, totalAnimals: cows + buff + bulls, cows, buff, bulls };
+        }
+
+        function updateMilkValues() {
+            Object.keys(milkCommodities).forEach(key => {
+                const alloc = Number(document.getElementById(`alc-${key}`).value);
+                const ratio = milkCommodities[key].ratio;
+                const price = Number(document.getElementById(`pri-${key}`).value);
+                const cost = milkCommodities[key].cost;
+                const value = (alloc * ratio * (price - cost));
+                document.getElementById(`val-${key}`).innerText = Math.round(value).toLocaleString();
+            });
+        }
+
+        function optimizeMilkMix() {
+            const baselines = updateBaselines();
+            const totalAnnualMilk = baselines.totalAnnualMilk;
+            let remaining = totalAnnualMilk;
+            Object.keys(milkCommodities).forEach(key => {
+                const cap = totalAnnualMilk * milkCommodities[key].maxDemand;
+                const allocation = Math.min(remaining, cap);
+                document.getElementById(`alc-${key}`).value = Math.round(allocation);
+                remaining -= allocation;
+            });
+            if(remaining > 0) {
+                const raw = Number(document.getElementById('alc-raw_milk').value);
+                document.getElementById('alc-raw_milk').value = raw + Math.round(remaining);
+            }
+            updateMilkValues();
+        }
+
+        function calculateCompletePlan() {
+            const baselines = updateBaselines();
+            const totalAnnualMilk = baselines.totalAnnualMilk;
+            const totalDung = baselines.totalDung;
+            const totalUrine = baselines.totalUrine;
+            const totalAnimals = baselines.totalAnimals;
+            
+            const costCow = Number(document.getElementById('cost-cow').value);
+            const costBuff = Number(document.getElementById('cost-buff').value);
+            const costBull = Number(document.getElementById('cost-bull').value);
+            
+            const stopAllPostTenure = document.getElementById('stop-all-post-tenure').checked;
+            const milkTenure = 7; 
+            const projYears = Math.min(Math.max(Number(document.getElementById('proj-years').value), 1), 20);
+
+            let totalCapex = (baselines.cows * costCow) + (baselines.buff * costBuff) + (baselines.bulls * costBull); 
+            let annualMilkRev = 0, annualWasteRev = 0, annualDraftRev = 0;
+            let animOpEx = 0, wwOpEx = 0, dpOpEx = 0;
+            let revData = [];
+
+            for(let i=0; i<machineryData.length; i++) {
+                const status = document.getElementById(`status-${i}`).value;
+                const buy = Number(document.getElementById(`buy-${i}`).value);
+                const rent = Number(document.getElementById(`rent-${i}`).value);
+                if (status === 'owned') totalCapex += buy;
+                else {
+                    const name = document.getElementById(`name-${i}`).value.toLowerCase();
+                    if(name.includes('biogas') || name.includes('compost')) wwOpEx += (rent * 12);
+                    else animOpEx += (rent * 12);
+                }
+            }
+
+            const dailyFeedCost = (
+                (Number(document.getElementById('f-green-q').value) * Number(document.getElementById('f-green-p').value)) +
+                (Number(document.getElementById('f-dry-q').value) * Number(document.getElementById('f-dry-p').value)) +
+                (Number(document.getElementById('f-sil-q').value) * Number(document.getElementById('f-sil-p').value))
+            );
+            animOpEx += (dailyFeedCost * 365 * totalAnimals);
+            animOpEx += (Number(document.getElementById('cost-vet').value) + Number(document.getElementById('cost-elec').value) + Number(document.getElementById('cost-lab').value)) * 12;
+
+            Object.keys(milkCommodities).forEach(key => {
+                const alloc = Number(document.getElementById(`alc-${key}`).value);
+                const ratio = milkCommodities[key].ratio;
+                const price = Number(document.getElementById(`pri-${key}`).value);
+                const cost = milkCommodities[key].cost;
+                const mRev = (alloc * ratio * (price - cost));
+                annualMilkRev += mRev;
+                revData.push({ name: milkCommodities[key].name, value: mRev, color: milkCommodities[key].color });
+            });
+
+            let brcNet = 0;
+            if(document.getElementById('do-biogas').checked) {
+                const val = (totalDung * Number(document.getElementById('gas-ratio').value) * Number(document.getElementById('gas-price').value)) * 365;
+                const opex = (totalDung * Number(document.getElementById('gas-ratio').value) * Number(document.getElementById('gas-cost').value)) * 365;
+                brcNet += (val - opex);
+                wwOpEx += opex;
+                document.getElementById('val-biogas').innerText = Math.round(val - opex).toLocaleString();
+                revData.push({ name: 'Biogas', value: (val - opex), color: '#f97316' });
+            }
+            if(document.getElementById('do-compost').checked) {
+                const val = (totalDung * Number(document.getElementById('comp-ratio').value) * Number(document.getElementById('comp-price').value)) * 365;
+                const opex = (totalDung * Number(document.getElementById('comp-ratio').value) * Number(document.getElementById('comp-cost').value)) * 365;
+                brcNet += (val - opex);
+                wwOpEx += opex;
+                document.getElementById('val-compost').innerText = Math.round(val - opex).toLocaleString();
+                revData.push({ name: 'Compost', value: (val - opex), color: '#16a34a' });
+            }
+            if(document.getElementById('do-urine').checked) {
+                const val = (totalUrine * Number(document.getElementById('urine-price').value)) * 365;
+                const opex = (totalUrine * Number(document.getElementById('urine-cost').value)) * 365;
+                brcNet += (val - opex);
+                wwOpEx += opex;
+                document.getElementById('val-urine').innerText = Math.round(val - opex).toLocaleString();
+                revData.push({ name: 'Urine', value: (val - opex), color: '#eab308' });
+            }
+            annualWasteRev = brcNet;
+
+            const bullCount = baselines.bulls;
+            const landVal = (Number(document.getElementById('dp-land-days').value) * Number(document.getElementById('dp-land-rate').value)) * bullCount;
+            const sowVal = (Number(document.getElementById('dp-sow-days').value) * Number(document.getElementById('dp-sow-rate').value)) * bullCount;
+            const millVal = (Number(document.getElementById('dp-mill-days').value) * Number(document.getElementById('dp-mill-rate').value)) * bullCount;
+            const postMilkRev = (Number(document.getElementById('dp-post-days').value) * Number(document.getElementById('dp-post-rate').value)) 
+                                * (baselines.cows + baselines.buff);
+            
+            annualDraftRev = landVal + sowVal + millVal + postMilkRev;
+            document.getElementById('dp-land-val').innerText = Math.round(landVal).toLocaleString();
+            document.getElementById('dp-sow-val').innerText = Math.round(sowVal).toLocaleString();
+            document.getElementById('dp-mill-val').innerText = Math.round(millVal).toLocaleString();
+            dpOpEx = (Number(document.getElementById('dp-opex-daily').value) * 365) * totalAnimals;
+            revData.push({ name: 'Draft Power', value: annualDraftRev, color: '#b91c1c' });
+
+            const peakRev = annualMilkRev + annualWasteRev + annualDraftRev;
+            const peakProfit = peakRev - (animOpEx + wwOpEx + dpOpEx);
+
+            document.getElementById('sum-anim-op').innerText = "₹ " + Math.round(animOpEx).toLocaleString();
+            document.getElementById('sum-ww-op').innerText = "₹ " + Math.round(wwOpEx).toLocaleString();
+            document.getElementById('sum-dp-op').innerText = "₹ " + Math.round(dpOpEx).toLocaleString();
+            document.getElementById('sum-total-op').innerText = "₹ " + Math.round(animOpEx + wwOpEx + dpOpEx).toLocaleString();
+
+            let lifeCycleTotalReturn = 0;
+            for (let yr = 1; yr <= projYears; yr++) {
+                let yRev = 0, yOp = (animOpEx + wwOpEx + dpOpEx);
+                if (stopAllPostTenure && yr > milkTenure) { yRev = 0; yOp = 0; }
+                else { yRev = (yr <= milkTenure) ? (annualMilkRev + annualWasteRev + annualDraftRev) : (annualWasteRev + annualDraftRev); }
+                lifeCycleTotalReturn += (yRev - yOp);
+            }
+            const roi = totalCapex > 0 ? ((lifeCycleTotalReturn / totalCapex) * 100).toFixed(1) : 0;
+
+            document.getElementById('res-capex').innerText = totalCapex.toLocaleString();
+            document.getElementById('res-revenue').innerText = Math.round(peakRev).toLocaleString();
+            document.getElementById('res-profit').innerText = Math.round(peakProfit).toLocaleString();
+            document.getElementById('res-roi').innerText = roi;
+
+            const banner = document.getElementById('viability-banner');
+            banner.classList.remove('hidden');
+            if (roi > 40) { banner.className = "p-6 rounded-2xl text-center text-white font-bold text-2xl shadow-lg bg-green-600"; banner.innerHTML = "✅ High Life-Cycle Gain"; }
+            else if (roi >= 15) { banner.className = "p-6 rounded-2xl text-center text-white font-bold text-2xl shadow-lg bg-amber-500"; banner.innerHTML = "⚠️ Stable Asset ROI"; }
+            else { banner.className = "p-6 rounded-2xl text-center text-white font-bold text-2xl shadow-lg bg-red-600"; banner.innerHTML = "❌ Review Asset Lifecycle"; }
+
+            updateChart(revData);
+            updateProjections(totalCapex, annualMilkRev, annualWasteRev, annualDraftRev, animOpEx, wwOpEx, dpOpEx, milkTenure, stopAllPostTenure, projYears);
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChart) revenueChart.destroy();
+            revenueChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(d => d.name),
+                    datasets: [{ data: data.map(d => d.value), backgroundColor: data.map(d => d.color) }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+            });
+        }
+
+        function updateProjections(capex, mRev, wRev, dRev, aOp, wOp, dOp, tenure, stopAll, years) {
+            const tbody = document.getElementById('projection-body');
+            tbody.innerHTML = "";
+            let cumulative = -capex;
+            for (let yr = 1; yr <= years; yr++) {
+                let yM = (yr <= tenure) ? mRev : 0, yW = wRev, yD = dRev, yA = aOp, yWOp = wOp, yDOp = dOp;
+                if (stopAll && yr > tenure) { yM = 0; yW = 0; yD = 0; yA = 0; yWOp = 0; yDOp = 0; }
+                const yearlyOpEx = yA + yWOp + yDOp;
+                cumulative += (yM + yW + yD - yearlyOpEx);
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-100">
+                        <td class="py-2 font-medium">${yr}</td>
+                        <td class="py-2 text-blue-600">₹${Math.round(yM).toLocaleString()}</td>
+                        <td class="py-2 text-blue-600">₹${Math.round(yW).toLocaleString()}</td>
+                        <td class="py-2 text-blue-600">₹${Math.round(yD).toLocaleString()}</td>
+                        <td class="py-2 text-red-600">₹${Math.round(yearlyOpEx).toLocaleString()}</td>
+                        <td class="py-2 text-right font-bold ${cumulative >= 0 ? 'text-green-600' : 'text-red-500'}">₹${Math.round(cumulative).toLocaleString()}</td>
+                    </tr>`;
+            }
+        }
+    </script>
+</body>
+</html>
