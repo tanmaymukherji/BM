@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DairyWealth Pro | Bio-Asset Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8fafc; }
+        .card-glass { background: white; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .input-sm { width: 100%; padding: 0.3rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; outline: none; font-size: 0.75rem; text-align: center; }
+        .input-sm:focus { border-color: #b45309; ring: 1px #b45309; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="text-slate-800 font-sans">
+
+    <header class="bg-amber-800 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2 rounded-full text-amber-800"><i class="fas fa-circle-notch text-2xl"></i></div>
+                <div>
+                    <h1 class="text-3xl font-bold">DairyWealth Optimizer</h1>
+                    <p class="text-amber-200 text-sm">Bio-Asset Management: Milk Engine vs Waste-to-Wealth (W/W) Engine</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span class="bg-amber-600 px-3 py-1 rounded-full text-xs border border-amber-400 uppercase font-bold">6M Framework Pro</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- LEFT COLUMN -->
+        <div class="lg:col-span-7 space-y-6">
+            
+            <!-- 1. BASELINE & FEED -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-xl font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-cow"></i> 1. Animal Asset & Life Cycle</h2>
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Cows</label><input type="number" id="count-cow" value="5" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Buffaloes</label><input type="number" id="count-buffalo" value="5" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Avg Ltr/Day</label><input type="number" id="avg-yield" value="12" oninput="updateBaselines()" class="input-sm"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase">Milking Life (Yrs)</label><input type="number" id="milk-tenure" value="7" class="input-sm"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-3 border-r pr-4">
+                        <p class="text-xs font-bold text-slate-400 uppercase">Daily Feed Input (Per Animal)</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="text-[10px]">Green Fodder (kg)</label><input type="number" id="f-green-q" value="20" oninput="updateBaselines()" class="input-sm"></div>
+                            <div><label class="text la-text-[10px]">Price (₹/kg)</label><input type="number" id="f-green-p" value="2" class="input-sm"></div>
+                            <div><label class="text la-text-[10px]">Dry Fodder (kg)</label><input type="number" id="f-dry-q" value="5" oninput="updateBaselines()" class="input-sm"></div>
+                            <div><label class="text de la-text-[10px]">Price (₹/kg)</label><input type="number" id="f-dry-p" value="5" class="input-sm"></div>
+                            <div><label class="text la-text-[10px]">Silage/Conc (kg)</label><input type="number" id="f-sil-q" value="3" oninput="updateBaselines()" class="input-sm"></div>
+                            <div><label class="text la-text-[10px]">Price (₹/kg)</label><input type="number" id="f-sil-p" value="12" class="input-sm"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-slate-400 uppercase">Upkeep Costs (Monthly)</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center"><span class="text-xs">Vet/Med:</span><input type="number" id="cost-vet" value="1000" class="input-sm w-24"></div>
+                            <div class="flex justify-between items-center"><span class="text-xs">Electricity:</span><input type="number" id="cost-elec" value="800" class="input-sm w-24"></div>
+                            <div class="flex justify-between items-center"><span class="text-xs">Labor:</span><input type="number" id="cost-lab" value="3000" class="input-sm w-24"></div>
+                            <div class="flex items-start gap-2 mt-4">
+                                <input type="checkbox" id="stop-all-post-tenure" class="mt-1 w-4 h-4 accent-amber-600">
+                                <label class="text-xs font-bold text-slate-600 leading-tight">Ignore Revenue and Expense after Milking Tenure (Cull Herd)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. MILK PARTITIONING -->
+            <section class="card-glass p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-amber-800 flex items-center gap-2"><i class="fas fa-vials"></i> 2. Milk Partitioning</h2>
+                    <button onclick="optimizeMilkMix()" class="text-xs bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-500 font-bold transition-all">Optimize Mix</button>
+                </div>
+                <div class="p-3 bg-amber-50 rounded-lg mb-4 flex justify-between items-center">
+                    <span class="text-sm font-medium text-amber-800">Total Daily Milk Pool:</span>
+                    <span class="text-lg font-black text-amber-900"><span id="total-milk-pool">120</span> Ltrs</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-slate-400 border-b">
+                            <tr class="uppercase">
+                                <th class="pb-2">Product</th>
+                                <th class="pb-2 text-center">Alloc (Ltrs)</th>
+                                <th class="pb-2 text-center">Ratio (1L$\rightarrow$X)</th>
+                                <th class="pb-2 text-center">Cost/Unit (₹)</th>
+                                <th class="pb-2 text-center">Yield (Unit)</th>
+                                <th class="pb-2 text-center">Price (₹)</th>
+                                <th class="pb-2 text-right">Value (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="milk-body"></tbody>
+                    </table >
+                </div>
+            </section>
+
+            <!-- 3. WASTE TO WEALTH -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-xl font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-recycle"></i> 3. Waste-to-Wealth Engine</h2>
+                <div class="p-3 bg-slate-100 rounded-lg mb-4 flex justify-between items-center">
+                    <span class="text-sm font-bold text-slate-600">Daily Dung Production (kg):</span>
+                    <input type="number" id="total-dung" class="input-sm w-24 font-bold text-slate-800" oninput="calculateCompletePlan()">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 border rounded-xl bg-orange-50">
+                        <div class="flex justify-between mb-2"><span class="font-bold text-orange-800">Bio-Gas (m³)</span><input type="checkbox" id="do-biogas" checked class="w-4 h-4"></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs"><span>Gas Yield/Dung:</span><input type="number" id="gas-ratio" value="0.04" class="input-sm w-16"></div>
+                            <div class="flex justify-between text-xs"><span>Selling Price (₹):</span><input type="number" id="gas-price" value="80" class="input-sm w-16"></div>
+                            <div class="flex justify-between text-xs"><span>Unit Cost (₹):</span><input type="number" id="gas-cost" value="10" class="input-sm w-16"></div>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-green-50">
+                        <div class="flex justify-between mb-2"><span class="font-bold text-green-800">Slurry Compost (kg)</span><input type="checkbox" id="do-compost" checked class="w-4 h-4"></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs"><span>Silt Yield/Dung:</span><input type="number" id="comp-ratio" value="0.7" class="input-sm w-16"></div>
+                            <div class="flex justify-between text-xs"><span>Selling Price (₹):</span><input type="number" id="comp-price" value="60" class="input-sm w-16"></div>
+                            <div class="flex justify-between text-xs"><span>Unit Cost (₹):</span><input type="number" id="comp-cost" value="15" class="input-sm w-16"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. MACHINERY -->
+            <section class="card-glass p-6 rounded-2xl">
+                <h2 class="text-xl font-bold mb-4 text-amber-800 flex items-center gap-2"><i class="fas fa-tools"></i> 4. Machinery Setup</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-slate-400 border-b">
+                            <tr class="uppercase">
+                                <th class="pb-2">Machine</th>
+                                <th class="pb-2 text-center">Buy (₹)</th>
+                                <th class="pb-2 text-center">Rent/Mo (₹)</th>
+                                <th class="pb-2 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="machinery-body"></tbody>
+                    </table >
+                </div>
+                <button onclick="calculateCompletePlan()" class="w-full mt-6 bg-amber-800 hover:bg-amber-700 text-white font-bold py-3 rounded-xl transition-all shadow-md">Compute Final Business Plan</button>
+            </section>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="lg:col-span-5 space-y-6">
+            <div id="viability-banner" class="hidden p-6 rounded-2 la-rounded-2xl text-center text-white font-bold text-2xl shadow-lg"></div>
+
+            <section class="card-glass p-4 rounded-2 la-rounded-2xl border-l-4 border-amber-700">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs font-bold text-slate-600 uppercase">Projection Horizon (Years)</label>
+                    <input type="number" id="proj-years" value="5" min="1" max="20" oninput="calculateCompletePlan()" class="input-sm w-20 font-bold text-amber-800">
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="card-glass p-6 rounded-2 la-rounded-2xl border-l-4 border-amber-500">
+                    <span class="text-slate-500 text-sm uppercase font-semibold">Total CAPEX</span>
+                    <div class="text-3xl font-black text-amber-900">₹ <span id="res-capex">0</span></div>
+                </div>
+                <div class="card-glass p-6 rounded-2 la-rounded-2xl border-l-4 border-blue-500">
+                    <span class="text-slate-500 text-sm uppercase font-semibold">Peak Mo. Revenue</span>
+                    <div class="text-3xl font-black text-blue-900">₹ <span id="res-revenue">0</span></div>
+                </div>
+                <div class="card-glass p-6 rounded-2 la-rounded-2xl border-l-4 border-purple-500">
+                    <span class="text-slate-500 text-sm uppercase font-semibold">Peak Mo. Profit</span>
+                    <div class="text-3xl font-black text-purple-900">₹ <span id="res-profit">0</span></div>
+                </div>
+                <div class="card-glass p-6 rounded-2 la-rounded-2xl border-l-4 border-green-500">
+                    <span class="text-slate-500 text-sm uppercase font-semibold">Life-Cycle ROI</span>
+                    <div class="text-3xl font-black text-green-900"><span id="res-roi">0</span>%</div>
+                </div>
+            </div>
+
+            <section class="card-glass p-6 rounded-2 la-rounded-2xl">
+                <h3 class="text-lg font-bold mb-4 text-slate-700">Revenue Distribution (Peak)</h3>
+                <div class="relative h-64"><canvas id="revenueChart"></canvas></div>
+            </section>
+
+            <section class="card-glass p-6 rounded-2 la-rounded-2xl overflow-x-auto">
+                <h3 class="text-lg font-bold mb-4 text-slate-700">Cash Flow Projection (Annual)</h3>
+                <table class="w-full text-left text-[10px]">
+                    <thead class="text-slate-400 border-b">
+                        <tr class="uppercase">
+                            <th class="pb-3">Year</th>
+                            <th class="pb-3">Milk Rev</th>
+                            <th class="pb-3">W/W Rev</th>
+                            <th class="pb-3">Anim OpEx</th>
+                            <th class="pb-3">W/W OpEx</th>
+                            <th class="pb-3 text-right">Net Position</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projection-body" class="text-slate-600"></tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const milkCommodities = {
+            'raw_milk': { name: 'Raw Milk', ratio: 1, price: 45, cost: 5, color: '#3b82f6', maxDemand: 0.6 },
+            'ghee': { name: 'Organic Ghee', ratio: 0.04, price: 650, cost: 120, color: '#eab308', maxDemand: 0.2 },
+            'paneer': { name: 'Fresh Paneer', ratio: 0.2, price: 380, cost: 110, color: '#10b981', maxDemand: 0.3 },
+            'lassi': { name: 'Lassi', ratio: 0.9, price: 40, cost: 10, color: '#f472b6', maxDemand: 0.4 },
+            'buttermilk': { name: 'Butter Milk', ratio: 0.8, price: 30, cost: 8, color: '#94a3b8', maxDemand: 0.4 }
+        };
+
+        const machineryData = [
+            { id: 'chaff', name: 'Chaff Cutter', buy: 15000, rent: 500, waste: false },
+            { id: 'milker', name: 'Milking Machine', buy: 40000, rent: 1200, waste: false },
+            { id: 'chiller', name: 'Bulk Milk Chiller', buy: 180000, rent: 4000, waste: false },
+            { id: 'separator', name: 'Cream Separator', buy: 50000, rent: 1500, waste: false },
+            { id: 'biogas', name: 'Biogas Plant', buy: 120000, rent: 3000, waste: true }
+        ];
+
+        let revenueChart = null;
+
+        window.onload = () => {
+            const mBody = document.getElementById('milk-body');
+            const machBody = document.getElementById('machinery-body');
+            Object.keys(milkCommodities).forEach(key => {
+                const item = milkCommodities[key];
+                mBody.innerHTML += `<tr class="border-b border-slate-100">
+                    <td class="py-3 font-medium">${item.name}</td>
+                    <td class="py-3"><input type="number" id="alc-${key}" value="0" oninput="updateMilkValues()" class="input-sm"></td>
+                    <td class la-py-3"><input type="number" step="0.01" id="rat-${key}" value="${item.ratio}" oninput="updateMilkValues()" class="input-sm"></td>
+                    <td class="py-3"><input type="number" id="cos-${key}" value="${item.cost}" oninput="updateMilkValues()" class="input-sm"></td>
+                    <td class="py-3 text-center font-bold text-slate-600" id="yld-${key}">0</td>
+                    <td class="py-3"><input type="number" id="pri-${key}" value="${item.price}" oninput="updateMilkValues()" class="input-sm"></td>
+                    <td class="py-3 text-right font-bold text-amber-700" id="val-${key}">0</td>
+                </tr>`;
+            });
+            machineryData.forEach(m => {
+                machBody.innerHTML += `<tr class="border-b border-slate-100">
+                    <td class="py-3">${m.name}</td>
+                    <td class="py-3 text-center"><input type="number" id="buy-${m.id}" value="${m.buy}" class="input-sm"></td>
+                    <td class="py-3 text-center"><input type="number" id="rent-${m.id}" value="${m.rent}" class="input-sm"></td>
+                    <td class="py-3 text-center">
+                        <select id="status-${m.id}" class="p-1 text-[10px] font-bold uppercase border rounded">
+                            <option value="owned">Owned</option>
+                            <option value="shared">Shared</option>
+                        </select>
+                    </td >
+                </tr>`;
+            });
+            updateBaselines();
+        };
+
+        function updateBaselines() {
+            const cows = Number(document.getElementById('count-cow').value);
+            const buff = Number(document.getElementById('count-buffalo').value);
+            const yield_ = Number(document.getElementById('avg-yield').value);
+            const totalMilk = (cows + buff) * yield_;
+            document.getElementById('total-milk-pool').innerText = totalMilk;
+
+            const gQ = Number(document.getElementById('f-green-q').value);
+            const dQ = Number(document.getElementById('f-dry-q').value);
+            const sQ = Number(document.getElementById('f-sil-q').value);
+            
+            // Biological logic for dung based on fodder composition
+            const dungPerAnimal = 10 + (gQ * 0.15) + (dQ * 0.05) + (sQ * 0.10);
+            const totalDung = (cows + buff) * dungPerAnimal;
+            document.getElementById('total-dung').value = Math.round(totalDung);
+            
+            return { totalMilk, totalDung: totalDung, totalAnimals: cows + buff };
+        }
+
+        function updateMilkValues() {
+            Object.keys(milkCommodities).forEach(key => {
+                const alloc = Number(document.getElementById(`alc-${key}`).value);
+                const ratio = Number(document.getElementById(`rat-${key}`).value);
+                const price = Number(document.getElementById(`pri-${key}`).value);
+                const cost = Number(document.getElementById(`cos-${key}`).value);
+                const yield_ = alloc * ratio;
+                const value = yield_ * (price - cost);
+                document.getElementById(`yld-${key}`).innerText = yield_.toFixed(2);
+                document.getElementById(`val-${key}`).innerText = value.toLocaleString(undefined, {minimumFractionDigits: 2});
+            });
+        }
+
+        function optimizeMilkMix() {
+            const { totalMilk } = updateBaselines();
+            let remaining = totalMilk;
+            let keys = Object.keys(milkCommodities);
+            keys.forEach(key => {
+                const limit = totalMilk * milkCommodities[key].maxDemand;
+                const allocation = Math.min(remaining, limit);
+                document.getElementById(`alc-${key}`).value = Math.round(allocation);
+                remaining -= allocation;
+            });
+            if(remaining > 0) {
+                const raw = Number(document.getElementById('alc-raw_milk').value);
+                document.getElementById('alc-raw_milk').value = raw + remaining;
+            }
+            updateMilkValues();
+        }
+
+        function calculateCompletePlan() {
+            const baselines = updateBaselines();
+            const totalAnimals = baselines.totalAnimals;
+            const totalDung = Number(document.getElementById('total-dung').value);
+            const stopAllPostTenure = document.getElementById('stop-all-post-tenure').checked;
+            const milkTenure = Number(document.getElementById('milk-tenure').value);
+            const projYears = Math.min(Math.max(Number(document.getElementById('proj-years').value), 1), 20);
+
+            let totalCapex = totalAnimals * 45000; 
+            let monthlyMilkRev = 0;
+            let monthlyWasteRev = 0;
+            let monthlyAnimalOpEx = 0;
+            let monthlyWasteOpEx = 0;
+            let revData = [];
+
+            machineryData.forEach(m => {
+                const status = document.getElementById(`status-${m.id}`).value;
+                if (status === 'owned') totalCapex += Number(document.getElementById(`buy-${m.id}`).value);
+                else {
+                    const rent = Number(document.getElementById(`rent-${m.id}`).value);
+                    if(m.waste) monthlyWasteOpEx += rent; else monthlyAnimalOpEx += rent;
+                }
+            });
+
+            const dailyFeed = (
+                (Number(document.getElementById('f-green-q').value) * Number(document.getElementById('f-green-p').value)) +
+                (Number(document.getElementById('f-dry-q').value) * Number(document.getElementById('f-dry-p').value)) +
+                (Number(document.getElementById('f-sil-q').value) * Number(document.getElementById('f-sil-p').value))
+            );
+            monthlyAnimalOpEx += (dailyFeed * 30 * totalAnimals);
+            monthlyAnimalOpEx += Number(document.getElementById('cost-vet').value) + Number(document.getElementById('cost-elec').value) + Number(document.getElementById('cost-lab').value);
+
+            Object.keys(milkCommodities).forEach(key => {
+                const alloc = Number(document.getElementById(`alc-${key}`).value);
+                const ratio = Number(document.getElementById(`rat-${key}`).value);
+                const price = Number(document.getElementById(`pri-${key}`).value);
+                const cost = Number(document.getElementById(`cos-${key}`).value);
+                const mRev = (alloc * ratio * (price - cost)) * 30;
+                monthlyMilkRev += mRev;
+                revData.push({ name: milkCommodities[key].name, value: mRev, color: milkCommodities[key].color });
+            });
+
+            if(document.getElementById('do-biogas').checked) {
+                const gR = Number(document.getElementById('gas-ratio').value);
+                const gP = Number(document.getElementById('gas-price').value);
+                const gC = Number(document.getElementById('gas-cost').value);
+                const gasS = (totalDung * gR * (gP - gC)) * 30;
+                monthlyWasteRev += gasS;
+                monthlyWasteOpEx += (totalDung * gR * gC) * 30;
+                revData.push({ name: 'Biogas', value: gasS, color: '#f97316' });
+            }
+            if(document.getElementById('do-compost').checked) {
+                const cR = Number(document.getElementById('comp-ratio').value);
+                const cP = Number(document.getElementById('comp-price').value);
+                const cC = Number(document.getElementById('comp-cost').value);
+                const compS = (totalDung * cR * (cP - cC)) * 30;
+                monthlyWasteRev += compS;
+                monthlyWasteOpEx += (totalDung * cR * cC) * 30;
+                revData.push({ name: 'Compost', value: compS, color: '#16a34a' });
+            }
+
+            const peakRev = monthlyMilkRev + monthlyWasteRev;
+            const peakProfit = peakRev - (monthlyAnimalOpEx + monthlyWasteOpEx);
+
+            let lifeCycleTotalReturn = 0;
+            for (let yr = 1; yr <= projYears; yr++) {
+                let annualRev = 0;
+                let annualOpEx = 0;
+                if (stopAllPostTenure && yr > milkTenure) {
+                    annualRev = 0; annualOpEx = 0;
+                } else {
+                    annualOpEx = (monthlyAnimalOpEx + monthlyWasteOpEx) * 12;
+                    annualRev = (yr <= milkTenure) ? (monthlyMilkRev + monthlyWasteRev) * 12 : (monthlyWasteRev * 12);
+                }
+                lifeCycleTotalReturn += (annualRev - annualOpEx);
+            }
+            const roi = totalCapex > 0 ? ((lifeCycleTotalReturn / totalCapex) * 100).toFixed(1) : 0;
+
+            document.getElementById('res-capex').innerText = totalCapex.toLocaleString();
+            document.getElementById('res-revenue').innerText = peakRev.toLocaleString();
+            document.getElementById('res-profit').innerText = peakProfit.toLocaleString();
+            document.getElementById('res-roi').innerText = roi;
+
+            const banner = document.getElementById('viability-banner');
+            banner.classList.remove('hidden');
+            if (roi > 40) { banner.className = "p-6 rounded-2L text-center text-white font-bold text-2xl shadow-lg bg-green-600"; banner.innerHTML = "✅ High Life-Cycle Gain"; }
+            else if (roi >= 15) { banner.className = "p-6 rounded-2L text-center text-white font-bold text-2xl shadow-lg bg-amber-500"; banner.innerHTML = "⚠️ Stable Asset ROI"; }
+            else { banner.className = "p-6 rounded-2L text-center text-white font-bold text-2xl shadow-lg bg-red-600"; banner.innerHTML = "❌ Review Asset Lifecycle"; }
+
+            updateChart(revData);
+            updateProjections(totalCapex, monthlyMilkRev, monthlyWasteRev, monthlyAnimalOpEx, monthlyWasteOpEx, milkTenure, stopAllPostTenure, projYears);
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChart) revenueChart.destroy();
+            revenueChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.map(d => d.name),
+                    datasets: [{ data: data.map(d => d.value), backgroundColor: data.map(d => d.color) }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function updateProjections(capex, milkRev, wasteRev, animOpEx, wasteOpEx, tenure, stopAll, years) {
+            const tbody = document.getElementById('projection-body');
+            tbody.innerHTML = "";
+            let cumulative = -capex;
+            for (let yr = 1; yr <= years; yr++) {
+                let aRev = 0, wRev = wasteRev * 12, aOp = animOpEx * 12, wOp = wasteOpEx * 12;
+                if (stopAll && yr > tenure) { aRev = 0; wRev = 0; aOp = 0; wOp = 0; }
+                else { aRev = (yr <= tenure) ? milkRev * 12 : 0; }
+                cumulative += (aRev + wRev - aOp - wOp);
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-100">
+                        <td class="py-3 font-medium">Year ${yr}</td>
+                        <td class="py-3 text-blue-600">₹${Math.round(aRev).toLocaleString()}</td>
+                        <td class="py-3 text-orange-600">₹${Math.round(wRev).toLocaleString()}</td>
+                        <td class="py-3 text-slate-500">₹${Math.round(aOp).toLocaleString()}</td>
+                        <td class="py-3 text-slate-500">₹${Math.round(wOp).toLocaleString()}</td>
+                        <td class="py-3 text-right font-bold ${cumulative >= 0 ? 'text-green-600' : 'text-red-500'}">₹${Math.round(cumulative).toLocaleString()}</td>
+                    </tr>`;
+            }
+        }
+    </script>
+</body >
+</html >
